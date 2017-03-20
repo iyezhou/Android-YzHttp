@@ -1,7 +1,6 @@
 package me.yezhou.yzhttp.request.builder;
 
 import java.io.File;
-import java.util.Map;
 
 import me.yezhou.yzhttp.request.PostFileRequest;
 import me.yezhou.yzhttp.request.RequestCall;
@@ -10,7 +9,7 @@ import okhttp3.MediaType;
 /**
  * Created by yezhou on 2017/3/16.
  */
-public class PostFileBuilder extends OkHttpRequestBuilder {
+public class PostFileBuilder extends OkHttpRequestBuilder<PostFileBuilder> {
 
     private File file;
     private MediaType mediaType;
@@ -30,33 +29,4 @@ public class PostFileBuilder extends OkHttpRequestBuilder {
         return this;
     }
 
-    @Override
-    public PostFileBuilder url(String url) {
-        return (PostFileBuilder) super.url(url);
-    }
-
-    @Override
-    public PostFileBuilder tag(Object tag) {
-        return (PostFileBuilder) super.tag(tag);
-    }
-
-    @Override
-    public PostFileBuilder params(Map<String, String> params) {
-        return (PostFileBuilder) super.params(params);
-    }
-
-    @Override
-    public PostFileBuilder addParam(String key, String val) {
-        return (PostFileBuilder) super.addParam(key, val);
-    }
-
-    @Override
-    public PostFileBuilder headers(Map<String, String> headers) {
-        return (PostFileBuilder) super.headers(headers);
-    }
-
-    @Override
-    public PostFileBuilder addHeader(String key, String val) {
-        return (PostFileBuilder) super.addHeader(key, val);
-    }
 }

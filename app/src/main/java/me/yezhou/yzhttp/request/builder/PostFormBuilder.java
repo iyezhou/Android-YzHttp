@@ -12,7 +12,7 @@ import me.yezhou.yzhttp.request.RequestCall;
 /**
  * Created by yezhou on 2017/3/14.
  */
-public class PostFormBuilder extends OkHttpRequestBuilder {
+public class PostFormBuilder extends OkHttpRequestBuilder<PostFormBuilder> implements HasParamsable {
 
     private List<FileInput> fileInputs = null;
 
@@ -21,11 +21,11 @@ public class PostFormBuilder extends OkHttpRequestBuilder {
         return new PostFormRequest(url, tag, params, headers, fileInputs).build();
     }
 
-    public PostFormBuilder addFile(String name, String filename, File file) {
+    public PostFormBuilder addFile(String key, String filename, File file) {
         if (fileInputs == null) {
             fileInputs = new ArrayList<>();
         }
-        fileInputs.add(new FileInput(name, filename, file));
+        fileInputs.add(new FileInput(key, filename, file));
         return this;
     }
 
@@ -39,6 +39,18 @@ public class PostFormBuilder extends OkHttpRequestBuilder {
 
     public PostFormBuilder files(List<FileInput> fileInputs) {
         this.fileInputs = fileInputs;
+        return this;
+    }
+
+    public PostFormBuilder files(String key, Map<String, File> files) {
+        if (files != null && files.size() > 0) {
+            if (fileInputs == null) {
+                fileInputs = new ArrayList<>();
+            }
+            for (String filename : files.keySet()) {
+                fileInputs.add(new FileInput(key, filename, files.get(filename)));
+            }
+        }
         return this;
     }
 
@@ -64,32 +76,17 @@ public class PostFormBuilder extends OkHttpRequestBuilder {
     }
 
     @Override
-    public PostFormBuilder url(String url) {
-        return (PostFormBuilder) super.url(url);
-    }
-
-    @Override
-    public PostFormBuilder tag(Object tag) {
-        return (PostFormBuilder) super.tag(tag);
-    }
-
-    @Override
     public PostFormBuilder params(Map<String, String> params) {
-        return (PostFormBuilder) super.params(params);
+        this.params = params;
+        return this;
     }
 
     @Override
     public PostFormBuilder addParam(String key, String val) {
-        return (PostFormBuilder) super.addParam(key, val);
-    }
-
-    @Override
-    public PostFormBuilder headers(Map<String, String> headers) {
-        return (PostFormBuilder) super.headers(headers);
-    }
-
-    @Override
-    public PostFormBuilder addHeader(String key, String val) {
-        return (PostFormBuilder) super.addHeader(key, val);
+        if (this.params == null) {
+            params = new LinkedHashMap<>();
+        }
+        params.put(key, val);
+        return this;
     }
 }

@@ -24,8 +24,11 @@ import me.yezhou.yzhttp.https.YzX509TrustManager;
 import me.yezhou.yzhttp.intercept.ProgressRequestBody;
 import me.yezhou.yzhttp.intercept.ProgressResponseBody;
 import me.yezhou.yzhttp.intercept.WriteFileResponseBody;
+import me.yezhou.yzhttp.request.OtherRequest;
 import me.yezhou.yzhttp.request.RequestCall;
 import me.yezhou.yzhttp.request.builder.GetBuilder;
+import me.yezhou.yzhttp.request.builder.HeadBuilder;
+import me.yezhou.yzhttp.request.builder.OtherRequestBuilder;
 import me.yezhou.yzhttp.request.builder.PostBytesBuilder;
 import me.yezhou.yzhttp.request.builder.PostFileBuilder;
 import me.yezhou.yzhttp.request.builder.PostFormBuilder;
@@ -148,9 +151,26 @@ public class YzHttp {
         return new PostFileBuilder();
     }
 
-    // 构造Post请求
+    // 构造Post请求(字节数组)
     public PostBytesBuilder postBytes() {
         return new PostBytesBuilder();
+    }
+
+    public OtherRequestBuilder put()
+    {
+        return new OtherRequestBuilder(OtherRequest.METHOD.PUT);
+    }
+
+    public HeadBuilder head() {
+        return new HeadBuilder();
+    }
+
+    public static OtherRequestBuilder delete() {
+        return new OtherRequestBuilder(OtherRequest.METHOD.DELETE);
+    }
+
+    public static OtherRequestBuilder patch() {
+        return new OtherRequestBuilder(OtherRequest.METHOD.PATCH);
     }
 
     // 公开自定义网络请求拦截器接口

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import me.yezhou.yzhttp.R;
 import me.yezhou.yzhttp.YzHttp;
@@ -145,7 +146,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Call call, Exception e) {
                 e.printStackTrace();
-                Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void inProgress(float progress) {
-                Log.i(TAG, (int) progress + "%");
+                mProgressBar.setProgress((int) progress);
             }
         });
     }
@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void postFile(View view) {
         File file = new File(Environment.getExternalStorageDirectory(), "test.txt");
-        YzHttp.getInstance().postFile().url("https://api.github.com/markdown/raw").addHeader("Content-Type", "text/plain").mediaType(PostFileRequest.MEDIA_TYPE_STREAM).file(file).build().enqueue(new Callback() {
+        YzHttp.getInstance().postFile().url("https://api.github.com/markdown/raw").mediaType(PostFileRequest.MEDIA_TYPE_PLAIN).file(file).build().enqueue(new Callback() {
             @Override
             public Object onNetworkResponse(Response response) throws Exception {
                 ResponseBody body = response.body();
@@ -351,6 +351,38 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Object response) {
                 Toast.makeText(MainActivity.this, "上传成功", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void put(View view) {
+        String[] cities = new String[]{"北京", "上海", "广州", "深圳", "杭州", "南京", "青岛"};
+        Random random = new Random();
+        YzHttp.getInstance().put().url("http://api.yezhou.me/api/object/5?name=" + cities[random.nextInt(cities.length)]).addParam("name", "哈哈").build().enqueue(new Callback() {
+            @Override
+            public Object onNetworkResponse(Response response) throws Exception {
+                ResponseBody body = response.body();
+                if (body != null) {
+                    String result = body.string();
+                    Log.i(TAG, result);
+                    body.close();
+                    JSONObject json = JSON.parseObject(result);
+                    return json.getString("name");
+                }
+                return null;
+            }
+
+            @Override
+            public void onError(Call call, Exception e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Object response) {
+                String result = (String) response;
+                if (!TextUtils.isEmpty(result)) {
+                    Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -715,5 +747,4 @@ public class MainActivity extends AppCompatActivity {
                 .check();
         }
     }
-
 }

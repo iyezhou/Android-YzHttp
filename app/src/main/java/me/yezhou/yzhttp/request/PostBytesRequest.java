@@ -1,9 +1,8 @@
-package me.yezhou.yzhttp.request.builder;
+package me.yezhou.yzhttp.request;
 
 import java.util.Map;
 
 import me.yezhou.yzhttp.exception.ParamIllegalException;
-import me.yezhou.yzhttp.request.OkHttpRequest;
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -14,11 +13,12 @@ import okhttp3.RequestBody;
  */
 public class PostBytesRequest extends OkHttpRequest {
 
-    private byte[] content;
-    private MediaType mediaType = MediaType.parse("text/plain; charset=utf-8");
+    private static MediaType mediaType = MediaType.parse("text/plain; charset=utf-8");
 
-    public PostBytesRequest(String url, Object tag, Map<String, String> headers, byte[] content) {
-        super(url, tag, null, headers);
+    private byte[] content;
+
+    public PostBytesRequest(String url, Object tag, Map<String, String> params, Map<String, String> headers, byte[] content) {
+        super(url, tag, params, headers);
         this.content = content;
 
         if (this.content == null || this.content.length == 0) {
