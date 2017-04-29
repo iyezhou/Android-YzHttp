@@ -23,6 +23,7 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
         return new GetRequest(url, tag, params, headers).build();
     }
 
+    /*
     private String appendParams(String url, Map<String, String> params) {
         if (url == null || params == null || params.isEmpty()) {
             return url;
@@ -36,15 +37,29 @@ public class GetBuilder extends OkHttpRequestBuilder<GetBuilder> implements HasP
         }
         return builder.build().toString();
     }
+    */
+
+    //解决URL中冒号等特殊符号的编码问题
+    private String appendParams(String url, Map<String, String> params) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(url + "?");
+        if (params != null && !params.isEmpty()) {
+            for (String key : params.keySet()) {
+                sb.append(key).append("=").append(params.get(key)).append("&");
+            }
+        }
+        sb = sb.deleteCharAt(sb.length() - 1);
+        return sb.toString();
+    }
 
     @Override
-    public OkHttpRequestBuilder params(Map<String, String> params) {
+    public GetBuilder params(Map<String, String> params) {
         this.params = params;
         return this;
     }
 
     @Override
-    public OkHttpRequestBuilder addParam(String key, String val) {
+    public GetBuilder addParam(String key, String val) {
         if (this.params == null) {
             params = new LinkedHashMap<>();
         }
